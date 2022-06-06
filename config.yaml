@@ -1,0 +1,60 @@
+device: cuda
+gpu: 0
+distributed: False
+world_size: 1
+batch_size: 8
+epochs: 16
+workers: 4
+
+output_dir: runs
+save_detections: False
+short: False
+print_freq: 20
+
+data:
+  data_path: data
+  dataset: mare
+  set_name: auspec
+  trainsplit: trainkf
+  valsplit: valfull
+  testsplit: testfull
+  traintype: cvat
+  use_ia: False
+  aug_pct: 0.5
+  mix_pad_pct: 0.0
+  roi_drop_pct: 0.75
+  count_cls_loss_scale: 0.001
+  aspect_ratio_group_factor: 3
+
+model:
+  model: fasterrcnn_resnet50_fpn
+  trainable_backbone_layers: None
+  rpn_score_thresh: None
+  start_weights: ''
+  test_only_weights: ''
+  pretrained: ''
+  resume: False
+  start_epoch: 0
+  hyper_params:
+  #initial learning rate, 0.02 is the default value for training on 8 gpus and 2 images_per_gpu
+    lr: 0.01
+    lr_step_size: 8
+    lr_steps: [16, 22]
+    lr_gamma: 0.99
+    momentum: 0.9
+    weight_decay: 0.0001
+    global_rep_scalar: 0.01
+    count_cls_loss_scale: 0.001
+
+  context_branch:
+    use_hpb: True
+    hpb_alpha: 0.0
+    use_crb: False
+    crb_alpha: 0.1
+    crb_start_epoch: 0
+    global_to_predictor: True
+    global_feats_for_logits: False
+    use_hpb_ctx_rep_only: False
+
+
+
