@@ -1,8 +1,3 @@
-'''
-primarily used for the habitat classification problem
-but will include here as well
-'''
-
 # parse xml gathering habitat information for each frame
 import math
 import pandas as pd
@@ -173,6 +168,32 @@ def get_frame_num(lid, tc):
     seconds = 3600*hour + 60*minute + second
 
     return (seconds*FPS + offset)
+
+if __name__ == "__main__":
+
+    xlsx_name = '/media/ssd1/mcever/datasets/MARE/MARE/Fish_Invert_Habitat_Data.xlsx'
+    dfs = pd.read_excel(xlsx_name, sheet_name=None)
+
+    dfkey = 'Habitat'
+    df = dfs[dfkey]
+    lineID_to_annos = {}
+    for i in range(len(df)):
+        #print(i)
+        lineID = df['LineID'][i]
+        bframe_num = get_frame_num(lineID, df['BTC'][i])
+        eframe_num = get_frame_num(lineID, df['ETC'][i])
+
+        if lineID not in lineID_to_annos:
+            lineID_to_annos[lineID] = Annos()
+        annos = lineID_to_annos[lineID]
+
+        annos.add_habitat_anno([df['Substrate'][i]], bframe_num, eframe_num)
+    # now want to be able to say
+    # annos = lineID_to_annos[lineID]
+    # annos_at_time_n = annos[n]
+    # substrat_at_n = annos_at_time_n['Substrate']
+        
+    #import pdb;pdb.set_trace()
                                                                                                                                         
 
 

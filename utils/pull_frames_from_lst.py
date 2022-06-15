@@ -1,36 +1,37 @@
 '''
-ensure all the HOME directories match yours
-ensure id_lst is correct
-adjust "for split in" line for the splits you're interested in
 if your run times out, you can just try running again as
 reader may get hung, otherwise
 TIMEOUT_MAX may need to be increased if your disk is slow
 '''
 
-from .utils.process_cvat_xml import process_cvat_xml
-from .utils.timeout import timeout
-from .utils.translate_boxes import translate_boxes
+from process_cvat_xml import process_cvat_xml
+from timeout import timeout
+from translate_boxes import translate_boxes
 import os
 import time
+import yaml
+
 import numpy as np
 import av
 from PIL import Image
 
-cvat_xml_home = 'data/idd/cvat_annos'
+with open('../config.yaml') as f:
+        args = yaml.load(f, Loader=yaml.Loader)
 
-set_name = 'auspec' # ifthab, conspec, auspec, etc
+data_path = args['data']['data_path']
+set_name = args['data']['set_name']
+cvat_xml_home = os.path.join(data_path, 'cvat_annos')
+VID_HOME = args['data']['vids_path']
+FRAME_HOME = os.path.join(data_path, 'frames')
+SPLITS = [args['data']['trainsplit'], args['data']['valsplit'], args['data']['testsplit']]
+
 TIMEOUT_MAX = 10 # in seconds
 h_off = 540 # half 
 w_off = 0
-VID_HOME = 'data/idd/vids/' # where raw videos are stored
-FRAME_HOME = 'data/MARE/cvat/' # where to output frames
-# ids = ['00002016080720454000']
 
 last_vid = ''
-# for split in ['train', 'val', 'test']:
-#for split in ['trainkf', 'valfull', 'testfull']:
-for split in ['testfull']:
-    id_lst = 'data/idd_lsts/{}_{}_cvat_frames.txt'.format(split, set_name)
+for split in SPLITS:
+    id_lst = os.path.join(data_path, 'idd_lsts','{}_{}_cvat_frames.txt'.format(split, set_name))
     assert(os.path.isfile(id_lst))
     split_home = os.path.join(FRAME_HOME, '{}_{}'.format(split, set_name))
     os.makedirs(split_home, exist_ok=True)

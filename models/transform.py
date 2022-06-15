@@ -33,7 +33,6 @@ class GeneralizedRCNNTransform(nn.Module):
         self.image_std = image_std
 
     def forward(self, images, targets=None):
-        # type: (List[Tensor], Optional[List[Dict[str, Tensor]]])
         images = [img for img in images]
         for i in range(len(images)):
             image = images[i]
@@ -144,7 +143,6 @@ class GeneralizedRCNNTransform(nn.Module):
         return maxes
 
     def batch_images(self, images, size_divisible=32):
-        # type: (List[Tensor], int)
         if torchvision._is_tracing():
             # batch_images() does not export well to ONNX
             # call _onnx_batch_images() instead

@@ -4,7 +4,7 @@ import pickle
 import random
 import sys
 sys.path.append("..")
-from .Annos import Annos
+from Annos import Annos
 from utils.process_cvat_xml import process_cvat_xml
 from utils.translate_boxes import translate_boxes
 from utils.cvat_boxes_to_fasterrcnn import cvat_boxes_to_fasterrcnn
@@ -36,10 +36,7 @@ class MareSpeciesDataset(Dataset):
         self.crop_mode = crop_mode
         self.count_offset = count_offset
         self.set_split = set_split
-        if self.set_split == 'tkfvf':
-            with open('/media/ssd1/mcever/invert_counter/data/idd_lsts/valfull_auspec_cvat_frames.txt', 'r') as f:
-                lines = f.readlines()
-                self.valfull = [l.strip() for l in lines]
+
 
         # self.species = ['bg', 'fragile pink urchin', 'gray gorgonian', 'squat lobster']
         self.species = ['aabg', 'fragile pink urchin', 'gray gorgonian', 'squat lobster', 'yellow gorgonian', 'white slipper sea cucumber', 'ui laced sponge', 'basket star', 'white spine sea cucumber', 'long legged sunflower star', 'red swiftia gorgonian']

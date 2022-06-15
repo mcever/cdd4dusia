@@ -43,7 +43,7 @@ import training.presets
 import utils.utils as utils
 
 import models
-from dataset.MareSpeciesDataset import MareSpeciesDataset
+from dataset.MareSpeciesDataset import MareSpeciesDataset, Annos
 from utils import read_train_pickles
 
 def seed_worker(worker_id):
@@ -62,7 +62,7 @@ def get_dataset(dpath, name, image_set, transform, data_path, short=False, use_i
     split = image_set
 
     id_lst_pth = os.path.join(dpath, 'idd_lsts', '{}_{}_{}_frames.txt'.format(split, set_name, ann_type))
-    fpath = os.path.join(dpath, 'MARE', '{}'.format(ann_type), '{}_{}'.format(split, set_name))
+    fpath = os.path.join(dpath, 'framesdw', '{}'.format(ann_type), '{}_{}'.format(split, set_name))
     
     if short:
         print('using {} short'.format(split))
