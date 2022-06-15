@@ -43,7 +43,7 @@ import training.presets
 import utils.utils as utils
 
 import models
-from dataset.MareSpeciesDataset import MareSpeciesDataset, Annos
+from dataset.MareSpeciesDataset import MareSpeciesDataset
 from utils import read_train_pickles
 
 def seed_worker(worker_id):

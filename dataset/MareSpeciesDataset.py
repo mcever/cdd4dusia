@@ -3,8 +3,7 @@ import os
 import pickle
 import random
 import sys
-sys.path.append("..")
-from Annos import Annos
+from utils.Annos import Annos
 from utils.process_cvat_xml import process_cvat_xml
 from utils.translate_boxes import translate_boxes
 from utils.cvat_boxes_to_fasterrcnn import cvat_boxes_to_fasterrcnn
