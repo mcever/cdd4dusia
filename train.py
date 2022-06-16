@@ -21,6 +21,7 @@ the number of epochs should be adapted so that we have the same number of iterat
 import datetime
 import os
 import sys
+sys.path.append('training')
 import time
 import pickle
 import yaml
@@ -36,13 +37,13 @@ import torch.utils.data
 import torchvision
 import torchvision.models.detection
 
-from utils.group_by_aspect_ratio import GroupedBatchSampler, create_aspect_ratio_groups
+from cdd_utils.group_by_aspect_ratio import GroupedBatchSampler, create_aspect_ratio_groups
 from training.engine import train_one_epoch, evaluate
 
 import training.presets
 import cdd_utils.cdd_utils as cdd_utils
 
-import models
+import mymodels
 from dataset.MareSpeciesDataset import MareSpeciesDataset
 from cdd_utils import read_train_pickles
 
@@ -62,7 +63,7 @@ def get_dataset(dpath, name, image_set, transform, data_path, short=False, use_i
     split = image_set
 
     id_lst_pth = os.path.join(dpath, 'idd_lsts', '{}_{}_{}_frames.txt'.format(split, set_name, ann_type))
-    fpath = os.path.join(dpath, 'framesdw', '{}'.format(ann_type), '{}_{}'.format(split, set_name))
+    fpath = os.path.join(dpath, 'frames', '{}_{}'.format(split, set_name))
     
     if short:
         print('using {} short'.format(split))
@@ -188,13 +189,15 @@ def main(args):
     kwargs['count_cls_loss_scale'] = args['data']['count_cls_loss_scale']
     kwargs['global_rep_scalar'] = args['model']['hyper_params']['global_rep_scalar']
     
+    '''
     if "rcnn" in args['model']['model']:
         if args['model']['rpn_score_thresh'] is not None:
             kwargs["rpn_score_thresh"] = args['model']['rpn_score_thresh']
+    '''
 
     print("Creating model")
     # model = torchvision.models.detection.__dict__[args['model']['model']](num_classes=num_classes, pretrained=args['model']['pretrained'], **kwargs)
-    model = models.__dict__[args['model']['model']](num_classes=num_classes, 
+    model = mymodels.__dict__[args['model']['model']](num_classes=num_classes, 
             pretrained=args['model']['pretrained'], roi_drop_pct=args['data']['roi_drop_pct'], **kwargs)
     model.to(device)
 

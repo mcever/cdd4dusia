@@ -3,12 +3,13 @@ import os
 import pickle
 import random
 import sys
-from cdd_utils.Annos import Annos
+from cdd_utils.Annos import Annos as Annos
 from cdd_utils.process_cvat_xml import process_cvat_xml
 from cdd_utils.translate_boxes import translate_boxes
 from cdd_utils.cvat_boxes_to_fasterrcnn import cvat_boxes_to_fasterrcnn
 from cdd_utils.cvat_boxes_to_fasterrcnn import cvat_boxes_to_BBs
 from cdd_utils.cvat_boxes_to_fasterrcnn import BBOI_to_fasterrcnn
+sys.modules['Annos'] = sys.modules['cdd_utils.Annos'] # for pickle compatibility
 
 from imgaug.augmentables.bbs import BoundingBox, BoundingBoxesOnImage
 
@@ -57,7 +58,6 @@ class MareSpeciesDataset(Dataset):
         for fid in id_lst:
             vid, fnum = fid.split('_')
             if vid not in self.vid_to_habs:
-                import pdb; pdb.set_trace()
                 with open(os.path.join(pickle_home, vid + '_habs.p'), 'rb') as f: 
                     hannos = pickle.load(f)
                 self.vid_to_habs[vid] = hannos
