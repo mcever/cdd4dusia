@@ -40,11 +40,11 @@ from utils.group_by_aspect_ratio import GroupedBatchSampler, create_aspect_ratio
 from training.engine import train_one_epoch, evaluate
 
 import training.presets
-import utils.utils as utils
+import cdd_utils.cdd_utils as cdd_utils
 
 import models
 from dataset.MareSpeciesDataset import MareSpeciesDataset
-from utils import read_train_pickles
+from cdd_utils import read_train_pickles
 
 def seed_worker(worker_id):
     worker_seed = torch.initial_seed() % 2**32
@@ -113,7 +113,7 @@ def main(args):
     # ia.seed is done in get_dataset if using imgaugs
 
     if args['distributed']:
-        utils.init_distributed_mode(args)
+        cdd_utils.init_distributed_mode(args)
     else:
         print('not using distributed mode')
     print(args)
@@ -156,20 +156,20 @@ def main(args):
 
     data_loader = torch.utils.data.DataLoader(
         dataset, batch_sampler=train_batch_sampler, num_workers=args['workers'],
-        collate_fn=utils.collate_fn,
+        collate_fn=cdd_utils.collate_fn,
         worker_init_fn=seed_worker)
 
     data_loader_test = torch.utils.data.DataLoader(
         dataset_test, batch_size=1,
         sampler=test_sampler, num_workers=args['workers'],
-        collate_fn=utils.collate_fn,
+        collate_fn=cdd_utils.collate_fn,
         worker_init_fn=seed_worker)
 
     if want_to_val_on_testsplit:
         data_loader_test2 = torch.utils.data.DataLoader(
             dataset_test2, batch_size=1,
             sampler=test_sampler2, num_workers=args['workers'],
-            collate_fn=utils.collate_fn,
+            collate_fn=cdd_utils.collate_fn,
             worker_init_fn=seed_worker)
     else:
         data_loader_test2 = None
@@ -309,7 +309,7 @@ def main(args):
             print('best train AP so far achieved {}'.format(best_train_AP))
 
         if args['output_dir'] and save_now:
-            utils.save_on_master({
+            cdd_utils.save_on_master({
                 'model': model_without_ddp.state_dict(),
                 'optimizer': optimizer.state_dict(),
                 'lr_scheduler': lr_scheduler.state_dict(),
@@ -368,7 +368,7 @@ if __name__ == "__main__":
         args = yaml.load(f, Loader=yaml.Loader)
 
     if args['output_dir']:
-        utils.mkdir(args['output_dir'])
-        utils.mkdir(os.path.join(args['output_dir'], 'pickles'))
+        cdd_utils.mkdir(args['output_dir'])
+        cdd_utils.mkdir(os.path.join(args['output_dir'], 'pickles'))
         
     main(args)

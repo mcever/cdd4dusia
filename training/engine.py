@@ -15,11 +15,11 @@ from torchvision.ops import boxes as box_ops
 
 from .coco_utils import get_coco_api_from_dataset
 from .coco_eval import CocoEvaluator
-import utils
+import cdd_utils
 import imageio
 import bbox_visualizer as bbv
 
-from utils.vis_cvat_annos import draw_fasterrcnn_boxes
+from cdd_utils.vis_cvat_annos import draw_fasterrcnn_boxes
 from torchvision import transforms
 import matplotlib.pyplot as plt
 
@@ -87,8 +87,8 @@ def vis_boxes(img, boxes, labels, fid='', sv_dir='figs'):
 
 def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
     model.train()
-    metric_logger = utils.MetricLogger(delimiter="  ")
-    metric_logger.add_meter('lr', utils.SmoothedValue(window_size=1, fmt='{value:.6f}'))
+    metric_logger = cdd_utils.MetricLogger(delimiter="  ")
+    metric_logger.add_meter('lr', cdd_utils.SmoothedValue(window_size=1, fmt='{value:.6f}'))
     header = 'Epoch: [{}]'.format(epoch)
 
     if model.ctx_branch is not None:
@@ -103,7 +103,7 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
         warmup_factor = 1. / 1000
         warmup_iters = min(1000, len(data_loader) - 1)
 
-        lr_scheduler = utils.warmup_lr_scheduler(optimizer, warmup_iters, warmup_factor)
+        lr_scheduler = cdd_utils.warmup_lr_scheduler(optimizer, warmup_iters, warmup_factor)
 
     for images, targets in metric_logger.log_every(data_loader, print_freq, header):
         images = list(image.to(device) for image in images)
@@ -129,7 +129,7 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
         losses = sum(loss for loss in loss_dict.values())
 
         # reduce losses over all GPUs for logging purposes
-        loss_dict_reduced = utils.reduce_dict(loss_dict)
+        loss_dict_reduced = cdd_utils.reduce_dict(loss_dict)
         losses_reduced = sum(loss for loss in loss_dict_reduced.values())
 
         loss_value = losses_reduced.item()
@@ -172,7 +172,7 @@ def evaluate(model, data_loader, device, use_crb=False, vis_dir=None):
     torch.set_num_threads(1)
     cpu_device = torch.device("cpu")
     model.eval()
-    metric_logger = utils.MetricLogger(delimiter="  ")
+    metric_logger = cdd_utils.MetricLogger(delimiter="  ")
     header = 'Test:'
 
     coco = get_coco_api_from_dataset(data_loader.dataset)

@@ -1,3 +1,6 @@
+data/frames/*
+invert_counter
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
