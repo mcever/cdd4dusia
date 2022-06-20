@@ -29,7 +29,10 @@ In order to get all the correct versions of dependencies, we recommend running t
 
         docker run -it --ipc="host" --gpus all -v /ABSOLUTE-PATH-TO-VIDEOS/:/workspace/cdd4dusia/data/vids cdd4dusia
 
-  * Note: If you have already extracted the frames with annotations for training, mount the frames to /workspace/cdd4dusia/data/frames in a similar fashion
+  * Note: If you have already extracted the frames with annotations for training, **or you would like to save the frames outside of the container**, mount the frames to /workspace/cdd4dusia/data/frames in a similar fashion. For example, 
+
+        docker run -it --ipc="host" --gpus all -v /ABSOLUTE-PATH-TO-VIDEOS/:/workspace/cdd4dusia/data/vids -v ABSOLUTE-PATH-TO/cdd4dusia/data/frames:/workspace/cdd4dusia/data/frames
+
   * If you do not have nvidia-docker installed (highly recommended), do  not include the GPU argument
 
         
