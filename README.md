@@ -1,39 +1,59 @@
-# Paper title
+# Context-Driven Detection of Invertebrate Species in Deep-Sea Video
 
-This is the code for XX found at XX
-
+This is the code for the CVPR22 CV4Animal's poster.
 
 # Setup
-This project was written and tested using Python 3.7 on Ubuntu 16.04.  You may need as much as 450 GB for all dependencies, code, raw videos, and uncompressed video data. You may need more if you want to work with alternative splits since this requires decompressing some of the video frames.
+This project was written and tested using Python 3.7 on Ubuntu 16.04.  You may need as much as 450 GB for all dependencies, code, raw videos, and uncompressed video data. You may need more if you want to work with alternative training splits since training requires decompressing some of the video frames.
 
-##  The Code
-Clone the repo.
+##  Data Download
+The data will be available on BisQue. To download the data from there, 
 
-##  Links
-Depending on your system, you may need to create soft links. git may do it for you, but it's good to check.
+Download the videos from here https://drive.google.com/drive/folders/1vPlA_oswqAEQ2tcQpSrGRoWfKRPeXSpn?usp=sharing and store them locally. 
 
-    cd detection
-    ln -s ../models mymodels
-    ln -s ../mare_utils mare_utils
+
+# Docker
+Due to evolving issues with dependencies and installations, we recommend running this code using our provided Docker container found here. To do so follow these steps:
+
+        
+* Make sure you have a Docker installed
+
+        docker version
+
+* Pull the CDD4Dusia Image
+
+        docker pull [IMAGE]
+
+* If you only have the videos downloaded, run this command to start the container and continue to "Data Preparation"
+
+        docker run -it --ipc="host" --gpus all -v /ABSOLUTE-PATH-TO-VIDEOS/:/workspace/cdd4dusia/data/vids cdd4dusia
+
+  * Note: If you have already extracted the frames with annotations for training, mount the frames to /workspace/cdd4dusia/data/frames in a similar fashion
+  * If you do not have nvidia-docker installed (highly recommended), do  not include the GPU argument
+
+        
+
+# Running without Docker
+Not all systems and Python versions are compatible with this code. This project was written and tested using Python 3.7 on Ubuntu 16.04. Begin by cloning the code and ensuring all soft links are properly handled.
+
+##  Config File
+Inside of *config.yaml* make sure that the paths to data directory and the directory of downloaded videos is correct
 
 ##  Dependencies
-You probably want to set up a virtual environment then run
+You probably want to set up a virtual environment before you run
 
     pip install -r requirements.txt
 
-##  Data Download
-Download the videos from here https://drive.google.com/drive/folders/1vPlA_oswqAEQ2tcQpSrGRoWfKRPeXSpn?usp=sharing and store them in data/idd. Download the splits you want to use form here [https://drive.google.com/drive/u/1/folders/1Hq9USShYSBzxmyiZcbAt8-CbUpQr3IZ6](https://drive.google.com/drive/u/1/folders/1Hq9USShYSBzxmyiZcbAt8-CbUpQr3IZ6) and store them in data/idd_lsts. 
 
-## Data Preparation
-Training the model requires decompressing and saving frames from the original video to allow for fast training. This will require a significant amount of storage as it pulls frames from compressed video and saves them uncompressed in .npy files. Due to descrepencies in different video codecs and video seeking, it is highly recommended to use this repo's scripts to pull frames to ensure the pulled frames' numbers match those in the annotations.
 
-    python pull_frames_from_lst path/to/lst path/to/frames
+# Data Preparation
+Training the model requires decompressing and saving frames from the original video to allow for fast training. This will require a significant amount of storage as it pulls frames from compressed video and saves them uncompressed in .npy files. Due to discrepancies in different video codecs and video seeking, it is highly recommended to use this repo's scripts to pull frames to ensure the pulled frames' numbers match those in the annotations.
 
-/data/MARE/split_setname is the recommended path/to/frames
+    cd cdd_utils
+    python pull_frames_from_lst
 
-## Train the Model
+Note that this will save uncompressed NumPy arrays inside of cdd4dusia/data/frames. If you cloned the repo on a smaller drive (say, an SSD) and would like to store the data on a separate drive, it is recommended to link to cdd4dusia/data/frames to that separate drive before running this command.
 
-    cd detection
-    CUDA_VISIBLE_DEVICES=0 python -m torch.distributed.launch --nproc_per_node=1 --use_env train.py    --dataset mare --model fasterrcnn_resnet50_fpn --epochs 25    --lr-steps 16 22 --aspect-ratio-group-factor 3 --output-dir path/to/output --batch-size 12 --workers 4 --lr 0.002 --distributed 0
-Run with CUDA_VISIBLE_DEVICES set to whatever you want
-exps/outXXX is the recommended path/to/output where XXX is unique to each experiment since detection/exps is included in .gitignore.
+# Train the Model
+
+    python train.py
+Run with CUDA_VISIBLE_DEVICES set to whatever you want. You can change the hyper-parameters of the model and training script inside of *config.yaml*.
