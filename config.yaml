@@ -12,8 +12,8 @@ short: False
 print_freq: 20
 
 data:
-  data_path: /media/ssd1/connor/cdd4dusia/data
-  vids_path: /media/ssd1/mare/idd/vids
+  data_path: /workspace/cdd4dusia/data
+  vids_path: /workspace/cdd4dusia/data/vids
   dataset: mare
   set_name: auspec
   trainsplit: trainkf
