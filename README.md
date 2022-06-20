@@ -6,18 +6,20 @@ This is the code for the CVPR22 CV4Animal's poster.
 This project was written and tested using Python 3.7 on Ubuntu 16.04.  You may need as much as 450 GB for all dependencies, code, raw videos, and uncompressed video data. You may need more if you want to work with alternative training splits since training requires decompressing some of the video frames.
 
 ##  Data Download
-The data will be available on BisQue. To download the data from there, 
-
-Download the videos from here https://drive.google.com/drive/folders/1vPlA_oswqAEQ2tcQpSrGRoWfKRPeXSpn?usp=sharing and store them locally. 
+The data will be available on BisQue. To download the data see instructions here https://www.austinmcever.com/CDD4DUSIA#h.796kvbv3ui3r
 
 
 # Docker
-Due to evolving issues with dependencies and installations, we recommend running this code using our provided Docker container found here. To do so follow these steps:
+In order to get all the correct versions of dependencies, we recommend running this code using our provided Docker container. To do so follow these steps:
 
         
-* Make sure you have a Docker installed
+* Make sure you have Docker installed
 
         docker version
+        
+* You can pull a pre-built container from TBD 
+
+        docker TBD
 
 * Build the CDD4Dusia Image
 
@@ -43,13 +45,11 @@ You probably want to set up a virtual environment before you run
 
     pip install -r requirements.txt
 
-
-
 # Data Preparation
 Training the model requires decompressing and saving frames from the original video to allow for fast training. This will require a significant amount of storage as it pulls frames from compressed video and saves them uncompressed in .npy files. Due to discrepancies in different video codecs and video seeking, it is highly recommended to use this repo's scripts to pull frames to ensure the pulled frames' numbers match those in the annotations.
 
     cd cdd_utils
-    python pull_frames_from_lst
+    python pull_frames_from_lst.py
 
 Note that this will save uncompressed NumPy arrays inside of cdd4dusia/data/frames. If you cloned the repo on a smaller drive (say, an SSD) and would like to store the data on a separate drive, it is recommended to link to cdd4dusia/data/frames to that separate drive before running this command.
 
