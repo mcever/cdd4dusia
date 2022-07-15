@@ -19,9 +19,9 @@ Due to evolving issues with dependencies and installations, we recommend running
 
         docker version
 
-* Build the CDD4Dusia Image
+* Pull the CDD4Dusia Image
 
-        docker build -t cdd4dusia .
+        docker pull connor11son/cdd4dusia
 
 * If you only have the videos downloaded, run this command to start the container and continue to "Data Preparation"
 
