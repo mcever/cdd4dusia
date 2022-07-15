@@ -16,10 +16,6 @@ In order to get all the correct versions of dependencies, we recommend running t
 * Make sure you have Docker installed
 
         docker version
-        
-* You can pull a pre-built container from TBD 
-
-        docker TBD
 
 * Pull the CDD4Dusia Image
 
