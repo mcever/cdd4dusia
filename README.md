@@ -1,6 +1,8 @@
 # Context-Driven Detection of Invertebrate Species in Deep-Sea Video
 
-This is the code for the CVPR22 CV4Animal's poster.
+This is the code for the CVPR22 CV4Animal's poster. This work has recently been accepted to be published in the International Journal of Computer Vision (IJCV).
+
+Thanks to Connor for helping organize my research code into this repository.
 
 # Setup
 This project was written and tested using Python 3.7 on Ubuntu 16.04.  You may need as much as 450 GB for all dependencies, code, raw videos, and uncompressed video data. You may need more if you want to work with alternative training splits since training requires decompressing some of the video frames.
